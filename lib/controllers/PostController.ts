@@ -7,47 +7,53 @@ class PostController {
     static async getAllPosts(req: Request, res: Response) {
 
         const { page = 1, width = 5, authorId } = req.query;
-        
+
         let widthNumber = Number(width);
         let pageNumber = Number(page);
 
-        const posts =
-            authorId ? (
-                await prisma.t2_post.findMany({
-                    where: { author_id: Number(authorId) },
-                    include: { t2_appuser: true },
-                    orderBy: { created_at: 'asc' },
-                })
-            ):(
-                await prisma.t2_post.findMany({
-                    include: { t2_appuser: true },
-                    orderBy: { created_at: 'asc' },
-                })
-            )
+        try {
+            const posts =
+                authorId ? (
+                    await prisma.t2_post.findMany({
+                        where: { author_id: Number(authorId) },
+                        include: { t2_appuser: true },
+                        orderBy: { created_at: 'asc' },
+                    })
+                ) : (
+                    await prisma.t2_post.findMany({
+                        include: { t2_appuser: true },
+                        orderBy: { created_at: 'asc' },
+                    })
+                )
 
-        const totalPosts = posts.length;
-        const pages = Math.ceil(totalPosts / widthNumber);
-        const start = (pageNumber - 1) * widthNumber;
-        const end = start + widthNumber;
-        const paginatedPosts = posts.slice(start, end);
+            const totalPosts = posts.length;
+            const pages = Math.ceil(totalPosts / widthNumber);
+            const start = (pageNumber - 1) * widthNumber;
+            const end = start + widthNumber;
+            const paginatedPosts = posts.slice(start, end);
 
-        res.status(200).json({
-            pages,
-            page: pageNumber,
-            width: widthNumber,
-            items: paginatedPosts.map(post => {
-                return {
-                    id: post.id,
-                    title: post.title,
-                    content: post.content,
-                    createdAt: post.created_at!.toISOString(),
-                    author: {
-                        id: post.t2_appuser.id,
-                        email: post.t2_appuser.email,
+            res.status(200).json({
+                pages,
+                page: pageNumber,
+                width: widthNumber,
+                items: paginatedPosts.map(post => {
+                    return {
+                        id: post.id,
+                        title: post.title,
+                        content: post.content,
+                        createdAt: post.created_at!.toISOString(),
+                        author: {
+                            id: post.t2_appuser.id,
+                            email: post.t2_appuser.email,
+                        }
                     }
-                }
+                })
+            });
+        } catch (error) {
+            res.status(500).json({
+                message: "Error getting posts: " + error,
             })
-        });
+        }
     }
 
     static async createPost(req: Request, res: Response) {

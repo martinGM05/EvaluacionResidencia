@@ -49,7 +49,6 @@ class CommentsController {
                     return {
                         id: comment.id,
                         content: comment.content,
-                        // yyyy-MM-ddTHH:mm:ss
                         createdAt: comment.created_at!.toISOString(),
                         author: {
                             id: comment.t2_appuser.id,

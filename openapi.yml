@@ -50,6 +50,36 @@ paths:
                   id: 1
         404:
           description: "Could not create post"
+    get:
+      tags:
+        - posts
+      summary: "Get all posts"
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: width
+          schema:
+            type: number
+          required: false
+        - in: query
+          name: author
+          schema:
+            type: number
+          required: false
+      description: "Get all posts with pagination and author"
+      responses:
+        200:
+          description: "All posts with pagination and author"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getPosts"
+        404:
+          description: "Could not get posts"
   /post/{:id}/comments:
     get:
       tags:
@@ -72,7 +102,7 @@ paths:
                 $ref: "#/components/schemas/getComments"
         404:
           description: "Could not get comments for a post"
-  /author/:id/activities:
+  /author/{:id}/activities:
     get:
       tags:
         - author
@@ -94,37 +124,6 @@ paths:
                 $ref: "#/components/schemas/getAllActivitiesForAnAuthor"
         404:
           description: "Could not get activities for an author"
-  /post?page={:page}&width={:width}&author={:author}:
-    get:
-      tags:
-        - posts
-      summary: "Get all posts"
-      parameters:
-        - in: query
-          name: page
-          schema:
-            type: number
-          required: false
-        - in: query
-          name: width
-          schema:
-            type: number
-          required: false
-        - in: query
-          name: author
-          schema:
-            type: number
-          required: false
-      description: "Get all posts with pagination and with author"
-      responses:
-        200:
-          description: "All posts with pagination and with author"
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/getPosts"
-        404:
-          description: "Could not get posts"
 
 components:
   schemas:
