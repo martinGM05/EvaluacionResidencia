@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model t2_appuser {
+  id         Int          @id @default(autoincrement())
+  email      String       @unique(map: "email") @db.VarChar(256)
+  t2_comment t2_comment[]
+  t2_post    t2_post[]
+}
+
+model t2_comment {
+  id         Int        @id @default(autoincrement())
+  content    String     @db.VarChar(512)
+  created_at DateTime?  @default(now()) @db.DateTime(0)
+  author_id  Int
+  post_id    Int
+  t2_appuser t2_appuser @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t2_comment_ibfk_1")
+  t2_post    t2_post    @relation(fields: [post_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t2_comment_ibfk_2")
+
+  @@index([author_id], map: "author_id")
+  @@index([post_id], map: "post_id")
+}
+
+model t2_post {
+  id         Int          @id @default(autoincrement())
+  title      String       @db.VarChar(256)
+  content    String       @db.VarChar(2048)
+  author_id  Int
+  created_at DateTime?    @default(now()) @db.DateTime(0)
+  t2_appuser t2_appuser   @relation(fields: [author_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "t2_post_ibfk_1")
+  t2_comment t2_comment[]
+
+  @@index([author_id], map: "author_id")
+}

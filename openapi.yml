@@ -1,0 +1,175 @@
+openapi: "3.0.2"
+info:
+  description: "Evalute"
+  version: "1.0.0"
+  title: "Evaluation"
+servers:
+  - url: localhost:3000
+paths:
+  /user:
+    post:
+      tags:
+        - user
+      summary: "Create a new user"
+      description: "Create a new user and return the user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postUser"
+      responses:
+        201:
+          description: "User created"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example:
+                  id: 1
+        404:
+          description: "Could not create user"
+  /post:
+    post:
+      tags:
+        - posts
+      summary: "Create a new post"
+      description: "Create a new post and return the post"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/postPosts"
+      responses:
+        201:
+          description: "Post created"
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: 
+                  id: 1
+        404:
+          description: "Could not create post"
+  /post/{:id}/comments:
+    get:
+      tags:
+        - comments
+      summary: "Comments for a post"
+      description: "Get all comments for a post with its author"
+      parameters:
+        - in: path
+          example: 1
+          name: id
+          schema:
+            type: number
+          required: true
+      responses:
+        200:
+          description: "Comments for a post"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getComments"
+        404:
+          description: "Could not get comments for a post"
+  /author/:id/activities:
+    get:
+      tags:
+        - author
+      summary: "Get all activities for an author"
+      description: "Find all activities for an author and its type of activity"
+      parameters:
+        - in: path
+          example: 1
+          name: id
+          schema:
+            type: number
+          required: true
+      responses:
+        200:
+          description: "Activities for an author"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getAllActivitiesForAnAuthor"
+        404:
+          description: "Could not get activities for an author"
+  /post?page={:page}&width={:width}&author={:author}:
+    get:
+      tags:
+        - posts
+      summary: "Get all posts"
+      description: "Get all posts with pagination and with author"
+      responses:
+        200:
+          description: "All posts with pagination and with author"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/getPosts"
+        404:
+          description: "Could not get posts"
+
+components:
+  schemas:
+    getComments:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+          content:
+            type: string
+          createdAt:
+            type: string
+          author:
+            type: object
+            properties:
+              id:
+                type: number
+              email:
+                type: string
+    postUser:
+      type: object
+      properties:
+        email:
+          type: string
+    postPosts:
+      type: object
+      properties:
+        authorId: 
+          type: number
+        title:
+          type: string
+        content:
+          type: string
+    getAllActivitiesForAnAuthor:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+          type:
+            type: string
+          title:
+            type: string
+          content:
+            type: string
+          createdAt:
+            type: string
+    getPosts:
+      type: array
+      items:
+        type: object
+        properties:
+          id:
+            type: number
+          title:
+            type: string
+          content:
+            type: string
+          createdAt:
+            type: string
+        
