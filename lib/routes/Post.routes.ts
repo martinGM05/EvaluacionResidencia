@@ -6,7 +6,7 @@ const postRouter = Router();
 
 postRouter.get("/", PostController.getAllPosts);
 postRouter.post("/", PostController.createPost);
-postRouter.get("/:id/comments", CommentsController.getAllComments);
+postRouter.get("/:id/comments", CommentsController.getCommentsById);
 
 
 export default postRouter;

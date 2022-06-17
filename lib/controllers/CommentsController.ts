@@ -30,7 +30,7 @@ class CommentsController {
         }
     }
 
-    static async getAllComments(req: Request, res: Response) {
+    static async getCommentsById(req: Request, res: Response) {
         const { id } = req.params;
 
         if (!id) {
