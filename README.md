@@ -24,12 +24,12 @@ graph TD;
     App --> Server
     Server --> AuthorRoutes
     Server --> CommentsRoutes
-    Server --> PostController
-    Server --> UserController
+    Server --> PostRoutes
+    Server --> UserRoutes
     AuthorRoutes --> AuthorController
     CommentsRoutes --> CommentsController
-    PostController --> PostController
-    UserController --> UserController
+    PostRoutes --> PostController
+    UserRoutes --> UserController
     AuthorController --> prisma
     CommentsController --> prisma
     PostController --> prisma
