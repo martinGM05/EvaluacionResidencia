@@ -1,6 +1,6 @@
 openapi: "3.0.2"
 info:
-  description: "Evalute"
+  description: "Intership"
   version: "1.0.0"
   title: "Evaluation"
 servers:
